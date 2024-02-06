@@ -12,12 +12,6 @@ Any web based application can use this library as a web component. It accepts co
 	```javascript
 	<script type="text/javascript" src="sunbird-epub-player.js"></script>
 	```
-- Update below script in index.html file 
-	```javascript
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/reflect-metadata/0.1.13/Reflect.min.js"
-      integrity="sha512-jvbPH2TH5BSZumEfOJZn9IV+5bSwwN+qG4dvthYe3KCGC3/9HmxZ4phADbt9Pfcp+XSyyfc2vGZ/RMsSUZ9tbQ=="
-      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	```
   
 - Get sample playerConfig from here: [playerConfig](https://github.com/Sunbird-Knowlg/sunbird-epub-player/blob/main/src/app/data.ts)
 
@@ -59,7 +53,6 @@ Any web based application can use this library as a web component. It accepts co
 - Run command 
   ```bash
     npm i @project-sunbird/sunbird-epub-player-web-component
-    npm i reflect-metadata
   ```
 
 - Add these entries in angular json file inside assets, scripts and styles like below
@@ -79,7 +72,6 @@ Any web based application can use this library as a web component. It accepts co
               "node_modules/@project-sunbird/sunbird-epub-player-web-component/styles.css"
             ],
             "scripts": [
-              "node_modules/reflect-metadata/Reflect.js",
               "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js"
             ]
 

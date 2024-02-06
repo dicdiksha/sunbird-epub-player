@@ -1,6 +1,6 @@
 {
   "name": "@project-sunbird/sunbird-epub-player-web-component",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "The web component package for the sunbird epub player",
   "main": "sunbird-epub-player.js",
   "scripts": {

@@ -192,6 +192,7 @@
               "projects/epub-player-wc/src/styles.scss"
             ],
             "scripts": [
+              "node_modules/reflect-metadata/Reflect.js",
               "node_modules/epubjs/dist/epub.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js"
             ],
