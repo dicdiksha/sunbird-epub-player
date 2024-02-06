@@ -2,7 +2,6 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/lib",
-    "target": "es2020",
     "declaration": true,
     "inlineSources": true,
     "types": [],
@@ -18,7 +17,7 @@
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "enableResourceInlining": true,
-    "enableIvy": true
+    "preserveSymlinks": true
   },
   "exclude": [
     "src/test.ts",
