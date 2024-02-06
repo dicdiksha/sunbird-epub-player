@@ -12,7 +12,7 @@ jobs:
           command: echo ${CIRCLE_BRANCH}
       - run:
           name: Install dependecies and audit for critical 
-          command: cd projects/sunbird-pdf-player &&  npm install --no-progress --legacy-peer-deps && npx audit-ci@^6 --config ./audit-ci.jsonc && rm -rf node_modules
+          command: cd projects/sunbird-epub-player &&  npm install --no-progress --legacy-peer-deps && npx audit-ci@^6 --config ./audit-ci.jsonc && rm -rf node_modules
       - run:
           name: Node install
           command: npm install --no-progress --legacy-peer-deps
