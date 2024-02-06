@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/sunbird-epub-player
     docker:
-     - image: circleci/node:14.18.2-browsers
+     - image: circleci/node:16.13.1-browsers
     steps:
       - checkout:
           path: ~/sunbird-epub-player
@@ -11,13 +11,11 @@ jobs:
           name: Show current branch
           command: echo ${CIRCLE_BRANCH}
       - run:
-          environment:
-            NG_CLI_ANALYTICS: "ci"
-          command: npm install
-      - run: cd projects/sunbird-epub-player && sudo npm install
+          name: Install dependecies and audit for critical 
+          command: cd projects/sunbird-pdf-player &&  npm install --no-progress --legacy-peer-deps && npx audit-ci@^6 --config ./audit-ci.jsonc && rm -rf node_modules
       - run:
           name: Node install
-          command: sudo npm install
+          command: npm install --no-progress --legacy-peer-deps
       - run:
           name: Linting
           command: npm run lint
