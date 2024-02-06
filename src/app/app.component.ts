@@ -39,7 +39,7 @@ export class AppComponent {
       host: '',
       endpoint: '',
       userData: {
-        firstName: 'Diptesh Mukherjee',
+        firstName: 'Harish',
         lastName: 'Gangula'
       },
       // if the dispatcher is provided then player won't send the event to backend container need to send it

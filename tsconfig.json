@@ -12,7 +12,7 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2020",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -33,6 +33,7 @@
       "@project-sunbird/sunbird-epub-player-v9/*": [
         "dist/sunbird-epub-player/*"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   }
 }
