@@ -26,6 +26,7 @@ export class EpubViewerComponent implements OnInit, OnChanges, AfterViewInit, On
   @Input() showFullScreen = false;
   @Output() viewerEvent = new EventEmitter<any>();
   idForRendition: any;
+  @Output() sendData: EventEmitter<any> = new EventEmitter();
   epubBlob: object;
 
   constructor(
@@ -43,6 +44,7 @@ export class EpubViewerComponent implements OnInit, OnChanges, AfterViewInit, On
   }
 
   async ngAfterViewInit() {
+    
     try {
       if (!this.viwerService.isAvailableLocally) {
         this.epubBlob = await this.viwerService.isValidEpubSrc(this.epubSrc);
@@ -54,6 +56,7 @@ export class EpubViewerComponent implements OnInit, OnChanges, AfterViewInit, On
         flow: 'paginated',
         width: '100%',
       });
+      this.sendData.emit(this.rendition);
       this.rendition.on('layout', (layout) => {
         this.viwerService.totalNumberOfPages = this.eBook?.navigation?.length;
         if (this.eBook.navigation.length > 2) {
@@ -92,6 +95,7 @@ export class EpubViewerComponent implements OnInit, OnChanges, AfterViewInit, On
     const { currentLocation } = this.config;
     if (!currentLocation) {
       this.rendition.display();
+      console.log(this.rendition.display(),'This is alert 3')
     }
     this.eBook.ready.then(() => {
       return this.eBook.locations.generate(1000);

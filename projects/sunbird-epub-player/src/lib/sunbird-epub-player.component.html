@@ -1,30 +1,32 @@
 <div class="sunbird-epub-container" #epubPlayer>
-<div *ngIf="viewState === fromConst.LOADING">
-    <sb-player-start-page [title]="viwerService.contentName" [progress]="progress"></sb-player-start-page>
-</div>
-<div class="epub-container" *ngIf="showEpubViewer">
-    <ng-container *ngIf="viewState === fromConst.START">
-        <sb-player-header class="notVisible" [totalPages]="viwerService?.totalNumberOfPages" [pageNumber]="currentPageIndex" [config]="headerConfiguration" (actions)="headerActions($event)" [ngClass]="{'isVisible': showControls}"></sb-player-header>
-        <sb-player-side-menu-icon class="notVisible" [ngClass]="{'isVisible': showControls}" (sidebarMenuEvent)="sidebarMenuEvent($event)">
-        </sb-player-side-menu-icon>
-        <sb-player-sidebar [title]="viwerService.contentName" (sidebarEvent)="sideBarEvents($event)"
-            [config]="sideMenuConfig"></sb-player-sidebar>
-        <div class="sb-epub-reading-status" *ngIf="currentPageIndex && viwerService?.totalNumberOfPages">
-            Page {{currentPageIndex}} of {{viwerService?.totalNumberOfPages}} <span></span> {{((currentPageIndex/viwerService?.totalNumberOfPages) * 100).toFixed(0)}}%
-        </div>
-        
-    </ng-container>
-    <epub-viewer  [actions]="headerActionsEvent" [epubSrc]="viwerService.src" [identifier]="viwerService.identifier"
-        (viewerEvent)="viewerEvent($event)" [config]="playerConfig.config" [showFullScreen]="showFullScreen">
-    </epub-viewer>
-</div>
-<sb-player-end-page *ngIf="viewState === fromConst.END" [contentName]="viwerService.contentName"
-    [outcomeLabel]="'Pages read: '" [outcome]="(currentPageIndex -1)" [showExit]="sideMenuConfig.showExit" [userName]="viwerService.userName"
-    [timeSpentLabel]="viwerService.timeSpent" (replayContent)="replayContent($event)" (exitContent)="exitContent($event)">
-</sb-player-end-page>
-<sb-player-contenterror *ngIf="showContentError"></sb-player-contenterror>
-</div>
-<div class="pagenotfound__tooltip" *ngIf="!validPage">
-    <div class="pagenotfound__icon"></div>
-    <div class="pagenotfound__text">Page Not Found</div>
-</div>
+    <div *ngIf="viewState === fromConst.LOADING">
+        <sb-player-start-page [title]="viwerService.contentName" [progress]="progress"></sb-player-start-page>
+    </div>
+    <div class="epub-container" *ngIf="showEpubViewer">
+        <ng-container *ngIf="viewState === fromConst.START">
+            <sb-player-header class="notVisible" (buttonclick)="handleButtonClick($event)" [totalPages]="viwerService?.totalNumberOfPages" [pageNumber]="currentPageIndex" [config]="headerConfiguration" (actions)="headerActions($event)" [ngClass]="{'isVisible': showControls}"></sb-player-header>
+            <sb-player-side-menu-icon class="notVisible" [ngClass]="{'isVisible': showControls}" (sidebarMenuEvent)="sidebarMenuEvent($event)">
+            </sb-player-side-menu-icon>
+            <sb-player-sidebar [title]="viwerService.contentName" (sidebarEvent)="sideBarEvents($event)"
+                [config]="sideMenuConfig"></sb-player-sidebar>
+            <div class="sb-epub-reading-status" *ngIf="currentPageIndex && viwerService?.totalNumberOfPages">
+                Page {{currentPageIndex}} of {{viwerService?.totalNumberOfPages}} <span></span> {{((currentPageIndex/viwerService?.totalNumberOfPages) * 100).toFixed(0)}}%
+            </div>
+            
+        </ng-container>
+        <epub-viewer  [actions]="headerActionsEvent" [epubSrc]="viwerService.src" [identifier]="viwerService.identifier"
+            (viewerEvent)="viewerEvent($event)" [config]="playerConfig.config" [showFullScreen]="showFullScreen" (sendData) ="recieveddata($event)" >
+            
+        </epub-viewer>
+    </div>
+    <sb-player-end-page *ngIf="viewState === fromConst.END" [contentName]="viwerService.contentName"
+        [outcomeLabel]="'Pages read: '" [outcome]="(currentPageIndex -1)" [showExit]="sideMenuConfig.showExit" [userName]="viwerService.userName"
+        [timeSpentLabel]="viwerService.timeSpent" (replayContent)="replayContent($event)" (exitContent)="exitContent($event)">
+    </sb-player-end-page>
+    <sb-player-contenterror *ngIf="showContentError"></sb-player-contenterror>
+    </div>
+    <div class="pagenotfound__tooltip" *ngIf="!validPage">
+        <div class="pagenotfound__icon"></div>
+        <div class="pagenotfound__text">Page Not Found</div>
+    </div>
+    

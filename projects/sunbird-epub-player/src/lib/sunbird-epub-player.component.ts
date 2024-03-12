@@ -39,6 +39,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
   intervalRef: any;
   progress = 0;
   showEpubViewer: boolean;
+  receivedData: any;
   public traceId: string;
   currentPageIndex = 1;
   headerConfiguration = {
@@ -74,6 +75,8 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
       }
     }
   }
+
+  
     // initializing services
     this.viwerService.initialize(this.playerConfig);
     this.epubPlayerService.initialize(this.playerConfig);
@@ -124,6 +127,17 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
 
   headerActions(eventdata) {
     this.headerActionsEvent.emit(eventdata);
+  }
+  recieveddata(data:any){
+    this.receivedData = data;
+    console.log(this.receivedData,'this is alert 1')
+  }
+  handleButtonClick(event:any){
+    this.recieveddata(this.receivedData)
+    console.log( event,'this is alert 2')
+    let synth = window.speechSynthesis
+    let speech = new SpeechSynthesisUtterance(this.receivedData);
+    synth.speak(speech);
   }
 
   viewerEvent(event) {
