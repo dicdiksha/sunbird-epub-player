@@ -15,7 +15,7 @@
             
         </ng-container>
         <epub-viewer  [actions]="headerActionsEvent" [epubSrc]="viwerService.src" [identifier]="viwerService.identifier"
-            (viewerEvent)="viewerEvent($event)" [config]="playerConfig.config" [showFullScreen]="showFullScreen" (sendData) ="recieveddata($event)" >
+            (viewerEvent)="viewerEvent($event)" [config]="playerConfig.config" [showFullScreen]="showFullScreen">
             
         </epub-viewer>
     </div>

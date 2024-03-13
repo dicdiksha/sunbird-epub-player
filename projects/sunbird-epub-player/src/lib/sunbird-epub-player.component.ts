@@ -8,6 +8,7 @@ import { ErrorService, errorCode, errorMessage } from '@project-sunbird/sunbird-
 import { UtilService } from './services/utilService/util.service';
 
 
+
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'sunbird-epub-player',
@@ -48,6 +49,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
     navigation: true,
     zoom: false
   };
+  
 
   constructor(
     public viwerService: ViwerService,
@@ -128,16 +130,22 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
   headerActions(eventdata) {
     this.headerActionsEvent.emit(eventdata);
   }
-  recieveddata(data:any){
-    this.receivedData = data;
-    console.log(this.receivedData,'this is alert 1')
-  }
+ 
   handleButtonClick(event:any){
-    this.recieveddata(this.receivedData)
-    console.log( event,'this is alert 2')
+    let epubjsId = document.querySelector('[id^="epubjs-view-"]').id;
+    let epubHTML = document.getElementById(epubjsId).getAttribute('srcdoc')
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(epubHTML, 'text/html')
+    var hTags = htmlDoc.querySelectorAll('h1, h2, h3, h4, h5, h6, p');
+    console.log("hTags", hTags);
+     let string =''
+    hTags.forEach(function (tag) {
+       string = string +tag.textContent
+    });
     let synth = window.speechSynthesis
-    let speech = new SpeechSynthesisUtterance(this.receivedData);
+    let speech = new SpeechSynthesisUtterance(string);
     synth.speak(speech);
+    
   }
 
   viewerEvent(event) {
