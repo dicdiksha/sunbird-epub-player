@@ -4,7 +4,7 @@
     </div>
     <div class="epub-container" *ngIf="showEpubViewer">
         <ng-container *ngIf="viewState === fromConst.START">
-            <sb-player-header class="notVisible" (buttonclick)="handleButtonClick($event)" [totalPages]="viwerService?.totalNumberOfPages" [pageNumber]="currentPageIndex" [config]="headerConfiguration" (actions)="headerActions($event)" [ngClass]="{'isVisible': showControls}"></sb-player-header>
+            <sb-player-header class="notVisible" (buttonclick)="handleButtonClick($event)" (buttonstop)="handleButtonstop($event)" [totalPages]="viwerService?.totalNumberOfPages" [pageNumber]="currentPageIndex" [config]="headerConfiguration" (actions)="headerActions($event)" [ngClass]="{'isVisible': showControls}"></sb-player-header>
             <sb-player-side-menu-icon class="notVisible" [ngClass]="{'isVisible': showControls}" (sidebarMenuEvent)="sidebarMenuEvent($event)">
             </sb-player-side-menu-icon>
             <sb-player-sidebar [title]="viwerService.contentName" (sidebarEvent)="sideBarEvents($event)"

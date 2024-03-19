@@ -1,6 +1,6 @@
 {
-  "name": "epub-library-demo",
-  "version": "0.0.0",
+  "name": "@dicdikshaorg/epub-player-v9",
+  "version": "5.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -29,6 +29,7 @@
     "@angular/platform-browser": "12.2.16",
     "@angular/platform-browser-dynamic": "12.2.16",
     "@angular/router": "12.2.16",
+    "@dicdikshaorg/player-sdk-v9": "^5.1.6",
     "@project-sunbird/client-services": "^3.4.8",
     "@project-sunbird/sb-styles": "0.0.7",
     "@project-sunbird/sunbird-player-sdk-v9": "^4.6.4",
@@ -48,6 +49,7 @@
     "@angular/language-service": "12.2.16",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/jquery": "^3.5.29",
     "@types/node": "^8.9.5",
     "codelyzer": "^6.0.0",
     "concat": "^1.0.3",

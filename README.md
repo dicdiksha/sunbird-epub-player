@@ -260,3 +260,19 @@ Follow below-mentioned steps to use it in plain javascript project:
 - To run the project, we can directly run index.html file or can use local server to run the project.
 
 - ![demo](https://github.com/project-sunbird/sunbird-epub-player/blob/release-4.5.0/web-component/epub-player-wc.png)
+
+## Latest Installation, Build and Publish Process 2024
+ 
+##Installation
+1. Go inside folder and use npm command(setup.sh).
+2. Check suitable node version in package.json in face any error during installation.
+ 
+##Build
+1. Upgrade package version
+2. Use command :  ng build sunbird-epub-player && node assets-copy.js && npm run schematics:build 
+ 
+##Publish
+1. Go inside /dist folder /dist/sunbird-epub-player/*
+2. Use command : npm publish  OR npm publish --access=public
+3. Use credentials if asked
+4. Check deployed version https://www.npmjs.com/package/@dicdikshaorg/epub-player-v9?activeTab=versions

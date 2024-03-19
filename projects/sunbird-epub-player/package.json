@@ -1,6 +1,6 @@
 {
-  "name": "@project-sunbird/sunbird-epub-player-v9",
-  "version": "5.2.1",
+  "name": "@dicdikshaorg/epub-player-v9",
+  "version": "5.0.1",
   "peerDependencies": {
     "@angular/common": ">=12.2.16",
     "@angular/core": ">=12.2.16",

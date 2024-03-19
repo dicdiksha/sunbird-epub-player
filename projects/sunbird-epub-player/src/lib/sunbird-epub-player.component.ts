@@ -108,6 +108,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    window.speechSynthesis.cancel();
     if (changes.showFullScreen && !changes?.showFullScreen?.firstChange) {
       this.showFullScreen = changes.showFullScreen.currentValue;
     }
@@ -130,23 +131,40 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
   headerActions(eventdata) {
     this.headerActionsEvent.emit(eventdata);
   }
- 
-  handleButtonClick(event:any){
-    let epubjsId = document.querySelector('[id^="epubjs-view-"]').id;
-    let epubHTML = document.getElementById(epubjsId).getAttribute('srcdoc')
-    const parser = new DOMParser();
-    const htmlDoc = parser.parseFromString(epubHTML, 'text/html')
-    var hTags = htmlDoc.querySelectorAll('h1, h2, h3, h4, h5, h6, p');
-    console.log("hTags", hTags);
-     let string =''
-    hTags.forEach(function (tag) {
-       string = string +tag.textContent
-    });
-    let synth = window.speechSynthesis
-    let speech = new SpeechSynthesisUtterance(string);
-    synth.speak(speech);
-    
+  handleButtonstop(event:any){
+     window.speechSynthesis.cancel();
   }
+
+  handleButtonClick(event: any) {
+    let epubjsId = document.querySelector('[id^="epubjs-view-"]').id;
+    if (epubjsId) {
+        let epubHTML = document.getElementById(epubjsId).getAttribute('srcdoc');
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(epubHTML, 'text/html');
+        var hTags = htmlDoc.querySelectorAll('a,span,h1,h2,h3,h4,h5,h6,p');
+
+        // Check if there are any matching elements
+        if (hTags.length > 0) {
+            let speechText = '';
+            hTags.forEach(function (tag) {
+                speechText += tag.textContent + ' ';
+                console.log(speechText,'this is speechtext')
+            });
+            let synth = window.speechSynthesis;
+            let speech = new SpeechSynthesisUtterance(speechText);
+            synth.speak(speech);
+        } 
+        else {
+            console.log('No matching elements found');
+        }
+    } 
+    else {
+        console.log('No epubjsId found');
+    }
+}
+
+
+  
 
   viewerEvent(event) {
     if (event.type === this.fromConst.EPUBLOADED) {
@@ -209,6 +227,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
     this.showEpubViewer = false;
     event.data.index = this.currentPageIndex;
     this.viwerService.raiseEndEvent(event);
+    window.speechSynthesis.cancel()
   }
 
   onEpubLoadFailed(error) {
@@ -262,6 +281,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
 
   @HostListener('window:beforeunload')
   ngOnDestroy() {
+    window.speechSynthesis.cancel()
     const EndEvent = {
       type: this.fromConst.END,
       data: {
