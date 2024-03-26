@@ -148,10 +148,12 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
             let speechText = '';
             hTags.forEach(function (tag) {
                 speechText += tag.textContent + ' ';
-                console.log(speechText,'this is speechtext')
+               
             });
             let synth = window.speechSynthesis;
-            let speech = new SpeechSynthesisUtterance(speechText);
+            let speech = new SpeechSynthesisUtterance();
+            speech.text = speechText
+            speech.lang = 'en-US'
             synth.speak(speech);
         } 
         else {

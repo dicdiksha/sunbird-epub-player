@@ -48,10 +48,8 @@ export class EpubViewerComponent implements OnInit, OnChanges, AfterViewInit, On
       if (!this.viwerService.isAvailableLocally) {
         this.epubBlob = await this.viwerService.isValidEpubSrc(this.epubSrc);
         this.eBook = Epub(this.epubBlob);
-        console.log(this.epubSrc,'This is alert 3')
       } else if (this.viwerService.isAvailableLocally) {
         this.eBook = Epub(this.epubSrc);
-        console.log(this.epubSrc,'This is alert 4')
       }
       this.rendition = this.eBook.renderTo(this.idForRendition, {
         flow: 'paginated',
