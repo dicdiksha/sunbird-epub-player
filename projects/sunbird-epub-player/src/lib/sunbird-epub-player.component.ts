@@ -3,9 +3,10 @@ import { EventEmitter, Component, Output, Input, OnInit, HostListener,
 import { ViwerService } from './services/viewerService/viwer-service';
 import { PlayerConfig } from './sunbird-epub-player.interface';
 import { EpubPlayerService } from './sunbird-epub-player.service';
-import { epubPlayerConstants, telemetryType } from './sunbird-epub.constant';
+import { epubPlayerConstants, pageId, telemetryType } from './sunbird-epub.constant';
 import { ErrorService, errorCode, errorMessage } from '@project-sunbird/sunbird-player-sdk-v9';
 import { UtilService } from './services/utilService/util.service';
+import { NextContent } from '@project-sunbird/sunbird-player-sdk-v9/sunbird-player-sdk.interface';
 
 
 @Component({
@@ -48,6 +49,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
     zoom: false
   };
 
+  nextContent: NextContent;
   constructor(
     public viwerService: ViwerService,
     private epubPlayerService: EpubPlayerService,
@@ -99,7 +101,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
     this.showEpubViewer = true;
     this.sideMenuConfig = { ...this.sideMenuConfig, ...this.playerConfig.config.sideMenu };
     this.getEpubLoadingProgress();
-
+    this.nextContent = this.playerConfig.config.nextContent;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -250,5 +252,9 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
     this.viwerService.isEndEventRaised = false;
     this.unlistenMouseEnter();
     this.unlistenMouseLeave();
+  }
+
+  playNextContent(event) {
+    this.viwerService.raiseHeartBeatEventNew(event?.type, telemetryType.INTERACT, pageId.endPage, event?.identifier);
   }
 }
