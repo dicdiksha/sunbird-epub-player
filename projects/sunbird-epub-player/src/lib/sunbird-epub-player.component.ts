@@ -135,7 +135,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
      window.speechSynthesis.cancel();
   }
 
-  handleButtonClick(event: any) {
+  handleButtonClick(event: { language: any, speed: any }) {
     let epubjsId = document.querySelector('[id^="epubjs-view-"]').id;
     if (epubjsId) {
         let epubHTML = document.getElementById(epubjsId).getAttribute('srcdoc');
@@ -153,8 +153,18 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
             let synth = window.speechSynthesis;
             let speech = new SpeechSynthesisUtterance();
             speech.text = speechText
-            speech.lang = 'en-US'
+            speech.lang = event.language
+            speech.pitch = parseFloat(event.speed)
             synth.speak(speech);
+            let interval = setInterval(() => {
+              console.log(speechSynthesis.speaking);
+              if (!speechSynthesis.speaking) {
+                clearInterval(interval);
+              } else {
+                speechSynthesis.pause();
+                speechSynthesis.resume();
+              }
+            }, 14000);
         } 
         else {
             console.log('No matching elements found');
