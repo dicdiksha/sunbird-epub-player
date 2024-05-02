@@ -254,6 +254,7 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
     this.unlistenMouseLeave();
   }
 
+  // Function to play next content
   playNextContent(event) {
     this.viwerService.raiseHeartBeatEventNew(event?.type, telemetryType.INTERACT, pageId.endPage, event?.identifier);
   }
