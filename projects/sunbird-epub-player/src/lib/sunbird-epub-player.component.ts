@@ -7,6 +7,7 @@ import { epubPlayerConstants, pageId, telemetryType } from './sunbird-epub.const
 import { ErrorService, errorCode, errorMessage } from '@project-sunbird/sunbird-player-sdk-v9';
 import { UtilService } from './services/utilService/util.service';
 import { NextContent } from '@project-sunbird/sunbird-player-sdk-v9/sunbird-player-sdk.interface';
+import { HttpClient} from "@angular/common/http";
 
 
 @Component({
@@ -35,6 +36,28 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
     showExit: false,
     showPrint: false
   };
+  url: string = 'https://meity-auth.ulcacontrib.org/ulca/apis/v0/model/compute';
+  audio: any = '';
+  audioQueue: any[] = [];
+  isPlaying: boolean = false;
+  counter: number = 0;
+  loading: boolean = false;
+  chunks=[]
+  isStreamIntrupted: boolean =false;
+  languageList =[
+    {languageCode:'en',modelId:'6576a17e00d64169e2f8f43d'},
+    {languageCode:'hi',modelId:'6576a1e500d64169e2f8f43e'},
+    {languageCode:'as',modelId:'6576a15e00d64169e2f8f43c'},
+    {languageCode:'bn',modelId:'6348db11fb796d5e100d4ffb'},
+    {languageCode:'gu',modelId:'6348db16fd966563f61bc2c1'},
+    {languageCode:'kn',modelId:'6576a2344e7d42484da63534'},
+    {languageCode:'mr',modelId:'633c02befd966563f61bc2be'},
+    {languageCode:'or',modelId:'6348db26fd966563f61bc2c2'},
+    {languageCode:'pa',modelId:'6576a27800d64169e2f8f440'},
+    {languageCode:'ta',modelId:'6348db32fd966563f61bc2c3'},
+    {languageCode:'te',modelId:'6348db37fb796d5e100d4ffe'},
+    {languageCode:'ur',modelId:'6576a2b000d64169e2f8f442'}
+  ]
   public isInitialized = false;
   viewState = this.fromConst.LOADING;
   intervalRef: any;
@@ -55,7 +78,8 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
     private epubPlayerService: EpubPlayerService,
     public errorService: ErrorService,
     public utilService: UtilService,
-    private renderer2: Renderer2
+    private renderer2: Renderer2,
+    public http: HttpClient
   ) {
     this.playerEvent = this.viwerService.playerEvent;
   }
@@ -126,6 +150,154 @@ export class EpubPlayerComponent implements OnInit, OnChanges, OnDestroy, AfterV
 
   headerActions(eventdata) {
     this.headerActionsEvent.emit(eventdata);
+  }
+
+  handleButtonstop() {
+    this.audio.pause();
+    this.audio.src ='';
+    this.isStreamIntrupted = true;
+    console.log(this.audio,"emptied audio");
+    this.counter =0;
+    this.isPlaying =false;
+   
+  }
+  getModelId(languageCode:string) {
+    const language = this.languageList.find(lang => lang.languageCode === languageCode);
+    console.log(language.modelId)
+    return language ? language.modelId : null;
+  }
+
+  async detectLanguage(chunk: string): Promise<string | null> {
+    return new Promise((resolve, reject) => {
+      const payload ={
+        input: [
+          { source: chunk }
+        ],
+        modelId: "631736990154d6459973318e",
+        task: "txt-lang-detection",
+        userId: "49eb8255277b40ddb7d706a100b36268"
+      };
+  
+      this.http.post(this.url, payload).subscribe(
+        (res: any) => {
+          const langCode = res.output[0].langPrediction[0].langCode;
+          const modelId = this.getModelId(langCode);
+          resolve(modelId);
+        },
+        error => {
+          console.error('Error detecting language:', error);
+          resolve(null); // Resolve with null if there's an error
+        }
+      );
+    });
+  }
+  
+  async handleButtonClick(gender: any) {
+    this.isStreamIntrupted =false;
+    this.audioQueue =[]
+    let epubjsId = document.querySelector('[id^="epubjs-view-"]').id;
+    if (epubjsId) {
+      let epubHTML = document.getElementById(epubjsId).getAttribute("srcdoc");
+      const parser = new DOMParser();
+      const htmlDoc = parser.parseFromString(epubHTML, "text/html");
+      var hTags = htmlDoc.querySelectorAll("a,span,h1,h2,h3,h4,h5,h6,p,ol,ul,li");
+  
+      if (hTags.length > 0) {
+        let speechText = "";
+        hTags.forEach(tag => {
+          speechText += tag.textContent + " ";
+        });
+        this.chunks = this.chunkText(speechText, 500);
+      
+        for (let i = 0; i < this.chunks.length; i++) {
+        if(!this.isStreamIntrupted){
+          console.log(this.chunks[i], 'this is chunks');
+          const modelId = await this.detectLanguage(this.chunks[i]);
+          await this.processChunk(this.chunks[i], gender, modelId);
+        }
+        else{
+          this.chunks =[];
+          break;
+        }
+        }
+      }
+    } else {
+      console.log("No epubjsId found");
+    }
+  }
+  
+  async processChunk(chunk: string, gender: any, modelId: string | null) {
+    if (!modelId) {
+      console.error('Model ID not found.');
+      return;
+    }
+  
+    const payload = {
+      modelId: modelId,
+      task: 'tts',
+      input: [{ source: chunk }],
+      gender: gender,
+      userId: '49eb8255277b40ddb7d706a100b36268',
+    };
+  
+    try {
+      const response: any = await this.http.post(this.url, payload).toPromise();
+      console.log(response);
+  
+      const audioContent = response.audio[0].audioContent;
+      const base64Audio = audioContent;
+      const audioUrl = 'data:audio/mp3;base64,' + base64Audio;
+      console.log(audioUrl,'this is audio Url')
+      this.audioQueue.push(audioUrl);
+  
+      if (!this.isPlaying) {
+        this.playNextAudio();
+      }
+    } catch (error) {
+      this.loading = false;
+      console.error('Error processing audio:', error);
+    }
+  }
+  playNextAudio() {
+    console.log('play next audio',this.audioQueue.length)
+    if (this.audioQueue.length > 0 && !this.isStreamIntrupted) {
+      console.log('counter ' ,this.counter)
+      this.loading = false;
+      const audioUrl = this.audioQueue[this.counter++]; //this.audioQueue.shift();
+      
+      this.audio = new Audio(audioUrl);
+      this.audio.controls = true;
+      
+      this.isPlaying = true;
+
+      // Play the audio
+      this.audio.play();
+  
+  
+      // Listen for audio end event to play the next audio
+      this.audio.addEventListener('ended', () => {
+        // Reset flag when audio ends
+        this.isPlaying = false;
+  
+        // Play the next audio in the queue
+        this.playNextAudio();
+      });
+    }
+     else {
+      // No more audio in the queue, reset flag
+      this.isPlaying = false;
+    }
+  }
+
+   // Function to split text into chunks
+   chunkText(text: string, chunkSize: number): string[] {
+    const chunks: string[] = [];
+    if (!text) return chunks; // Return empty array if text is falsy
+  
+    for (let i = 0; i < text.length; i += chunkSize) {
+      chunks.push(text.substring(i, i + chunkSize));
+    }
+    return chunks;
   }
 
   viewerEvent(event) {
