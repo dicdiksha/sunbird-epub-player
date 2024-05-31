@@ -20,7 +20,7 @@
 </div>
 <sb-player-end-page *ngIf="viewState === fromConst.END" [contentName]="viwerService.contentName"
     [outcomeLabel]="'Pages read: '" [outcome]="(currentPageIndex -1)" [showExit]="sideMenuConfig.showExit" [userName]="viwerService.userName"
-    [timeSpentLabel]="viwerService.timeSpent" (replayContent)="replayContent($event)" (exitContent)="exitContent($event)">
+    [timeSpentLabel]="viwerService.timeSpent" (replayContent)="replayContent($event)" (exitContent)="exitContent($event)" [nextContent]="nextContent" (playNextContent)="playNextContent($event)">
 </sb-player-end-page>
 <sb-player-contenterror *ngIf="showContentError"></sb-player-contenterror>
 </div>

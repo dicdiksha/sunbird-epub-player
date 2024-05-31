@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { PlayerConfig } from '../../sunbird-epub-player.interface';
 import { EpubPlayerService } from '../../sunbird-epub-player.service';
 import { UtilService } from '../utilService/util.service';
-import { telemetryType } from '../../sunbird-epub.constant';
+import { eventName, telemetryType } from '../../sunbird-epub.constant';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -155,5 +155,34 @@ export class ViwerService {
         reject(error);
       });
     });
+  }
+
+
+  raiseHeartBeatEventNew(type: string, telemetryType1: string, pageId: number | string, nextContentId?: string) {
+    const hearBeatEvent: any = {
+      eid: 'HEARTBEAT',
+      ver: this.version,
+      edata: {
+        type,
+        currentPage: this.currentIndex
+      },
+      metaData: this.metaData
+    };
+
+    if (type === eventName.nextContentPlay && nextContentId) {
+      hearBeatEvent.edata.nextContentId = nextContentId;
+    }
+
+    // if (this.isSectionsAvailable) {
+    //   hearBeatEvent.edata.sectionId = this.questionSetId;
+    // }
+
+    this.playerEvent.emit(hearBeatEvent);
+    if (telemetryType.INTERACT === telemetryType1) {
+      this.epubPlayerService.interact(type.toLowerCase(), pageId);
+    } else if (telemetryType.IMPRESSION === telemetryType1) {
+      this.epubPlayerService.impression(pageId);
+    }
+
   }
 }
