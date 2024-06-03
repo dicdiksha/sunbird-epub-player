@@ -29,6 +29,7 @@
     "@angular/platform-browser": "12.2.16",
     "@angular/platform-browser-dynamic": "12.2.16",
     "@angular/router": "12.2.16",
+    "@dicdikshaorg/player-sdk-v9": "5.1.9",
     "@project-sunbird/client-services": "^3.4.8",
     "@project-sunbird/sb-styles": "0.0.7",
     "@project-sunbird/sunbird-player-sdk-v9": "^4.6.4",
